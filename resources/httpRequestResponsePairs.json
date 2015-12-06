@@ -1,0 +1,58 @@
+{
+  "1" :
+  {
+    "request": {
+      "endpoint": "/monitoring/heartbeat",
+      "method": "POST",
+      "body": { "username": "davide",
+        "password" : "hello" }
+    },
+    "response": {
+      "content": "Alive",
+      "code": "200"
+    }
+  },
+  "2" : {
+    "request": {
+      "endpoint": "/subject",
+      "method": "GET",
+      "headers": {
+        "predix-zone-id" : "456-789-890",
+        "authentication" : "Bearer fejg4g4"
+      },
+      "parameters": {
+        "id" : "15",
+        "category" : "cars"
+      }
+    },
+    "response": {
+      "content_type": "application/json",
+      "content": { "subjectId" : "1", "subjectName" : "Davide" },
+      "code": "200"
+    }
+  },
+  "3" : {
+    "request": {
+      "endpoint": "/subject",
+      "method": "POST",
+      "body": { "id": "1",
+        "subjectIdentifier" : "davide" }
+    },
+    "response": {
+      "content": "Stored",
+      "code": "200"
+    }
+  },
+  "4" : {
+    "request": {
+      "endpoint": "/subject",
+      "method": "PUT",
+      "body": { "id": "1",
+        "subjectIdentifier" : "davide" }
+    },
+    "response": {
+      "content": "Stored",
+      "code": "200"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "1": {
+  "path": "/monitoring/heartbeat",
+  "method": "POST"
+  },
+  "2": {
+    "path": "/subject",
+    "method": "GET"
+  },
+  "3": {
+    "path": "/subject",
+    "method": "POST"
+  },
+  "4": {
+    "path": "/subject",
+    "method": "PUT"
+  }
+}
