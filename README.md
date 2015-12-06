@@ -30,8 +30,35 @@ Not supported yet:
 
 This application is under development, for the missing features: 
 
+## Testing
 
+#####Endpoints.json configuration
 
+```json
+{
+  "1": {
+  "path": "/monitoring",
+  "method": "GET"
+  }
+}
+```
+#####HTTPRequestResponsePairs.json configuration
+
+```json
+{
+  "1" :
+  {
+    "request": {
+      "endpoint": "/monitoring",
+      "method": "GET"
+    },
+    "response": {
+      "content": "Alive",
+      "code": "200"
+    }
+  }
+}
+```
 
 
 
