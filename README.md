@@ -14,9 +14,9 @@ Methods supported:
 * PUT (application/json body, application/x-www-form-urlencoded body parameters, headers)
 
 Not supported yet: 
-* GET (uri template)
-* POST (application/xml body)
-* PUT (application/xml body)
+* URI template (i.e. /user/{userId} )
+* POST (application/xml, multi-part/formdata and other content types body)
+* PUT (application/xml, multi-part/formdata and other content types body)
 * DELETE 
 
 ## HTTP Response
@@ -28,9 +28,11 @@ Not supported yet:
 
 * application/xml body
 
-This application is under development, for the missing features: 
+This application is under development, for the missing features. 
 
 ## Testing
+
+For testing purposes the application has the following configuration.
 
 #####Endpoints.json configuration
 
@@ -60,6 +62,8 @@ This application is under development, for the missing features:
 }
 ```
 
-
+```bash
+curl -X GET http://localhost:8081/monitoring
+```
 
 
