@@ -3,6 +3,9 @@
  *
  */
 
+var Configuration = require('./../Configuration.js');
+var Logger = require('./../Logger.js');
+
 /**
  * This class represents the Object matcher. It tries to match the request Object with
  * the in-memory requests Object.
@@ -14,6 +17,18 @@
  * @constructor
  */
 function ObjectMatcher() {}
+
+/**
+ * App configuration
+ */
+var CONFIGURATION = new Configuration();
+
+/**
+ * Logger
+ *
+ * @type {exports|module.exports}
+ */
+var LOGGER = new Logger(CONFIGURATION.LOG_LEVEL);
 
 /**
  * Matches the request Object with in-memory Object if applicable
@@ -39,12 +54,12 @@ ObjectMatcher.prototype.match = function(storedObjects, requestObjects ) {
         }
 
         if(storedObjectLength != matchedObject){
-            console.log("DEBUG - some Object not matched (%s,%s)",storedObjectLength,matchedObject );
+            LOGGER.debug("Some Object not matched ("+storedObjectLength+","+matchedObject+")");
             return false;
         }
 
     }else{
-        console.log("DEBUG - ObjectMatcher not applicable");
+        LOGGER.debug("ObjectMatcher not applicable");
     }
 
     return true;

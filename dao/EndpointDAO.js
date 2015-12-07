@@ -3,6 +3,8 @@
  */
 
 var fs = require('fs');
+var Configuration = require('./../Configuration.js');
+var Logger = require('./../Logger.js');
 
 /**
  * This class represents a Endpoint DAO implementation.
@@ -16,7 +18,24 @@ var fs = require('fs');
  */
 function EndpointDAO() {}
 
-var ENDPOINTS_JSON = "resources/endpoints.json";
+/**
+ * App configuration
+ */
+var CONFIGURATION = new Configuration();
+
+/**
+ * Endpoint definition file
+ *
+ * @type {string}
+ */
+var ENDPOINTS_JSON = CONFIGURATION.ENDPOINTS_JSON;
+
+/**
+ * Logger
+ *
+ * @type {exports|module.exports}
+ */
+var LOGGER = new Logger(CONFIGURATION.LOG_LEVEL);
 
 /**
  * Returns the in-memory Endpoints.
@@ -25,13 +44,11 @@ var ENDPOINTS_JSON = "resources/endpoints.json";
  */
 EndpointDAO.prototype.getAllEndpoints = function(){
 
-    console.log("DEBUG - Reading from file(%s) JSON endpoints:",ENDPOINTS_JSON);
+    LOGGER.debug("Reading JSON endpoints definition from file("+ENDPOINTS_JSON+")...");
 
     var endpoints = JSON.parse(fs.readFileSync(ENDPOINTS_JSON, 'utf8'));
 
-    console.log("DEBUG - log JSON endpoints:");
-
-    console.log(endpoints);
+    LOGGER.debug("JSON endpoints found:",endpoints);
 
     return endpoints;
 

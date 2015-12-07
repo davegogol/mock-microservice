@@ -5,7 +5,8 @@
 var fs = require('fs');
 var StringMatcher = require("./../matcher/StringMatcher.js");
 var ObjectMatcher = require("./../matcher/ObjectMatcher.js");
-
+var Configuration = require('./../Configuration.js');
+var Logger = require('./../Logger.js');
 
 /**
  * This class represents a HTTPRequestResponsePair DAO implementation.
@@ -19,7 +20,23 @@ var ObjectMatcher = require("./../matcher/ObjectMatcher.js");
  */
 function HTTPRequestResponsePairDAO() {}
 
-var HTTP_REQUEST_RESPONSE_PAIRS_JSON = "resources/httpRequestResponsePairs.json";
+/**
+ * App configuration
+ */
+var CONFIGURATION = new Configuration();
+
+/**
+ * Logger
+ *
+ * @type {exports|module.exports}
+ */
+var LOGGER = new Logger(CONFIGURATION.LOG_LEVEL);
+
+/**
+ * HTTP_REQUEST_RESPONSE_PAIRS_JSON
+ * @type {string}
+ */
+var HTTP_REQUEST_RESPONSE_PAIRS_JSON = CONFIGURATION.HTTP_REQUEST_RESPONSE_PAIRS_JSON;
 
 /**
  * String matcher
@@ -43,12 +60,11 @@ var ObjectMatcher = new ObjectMatcher();
  */
 function getAllHTTPRequestResponsePairs(){
 
-    console.log("DEBUG - Reading from file(%s) JSON httpRequestResponsePairs:",HTTP_REQUEST_RESPONSE_PAIRS_JSON);
+    LOGGER.debug("Reading JSON httpRequestResponsePairs definition from file("+ HTTP_REQUEST_RESPONSE_PAIRS_JSON + ")");
 
     var httpRequestResponsePairs = JSON.parse(fs.readFileSync(HTTP_REQUEST_RESPONSE_PAIRS_JSON, 'utf8'));
 
-    console.log("DEBUG - log JSON httpRequestResponsePairs:");
-    console.log(httpRequestResponsePairs);
+    LOGGER.debug("JSON httpRequestResponsePairs definition found:", httpRequestResponsePairs);
 
     return httpRequestResponsePairs;
 }
@@ -69,37 +85,33 @@ var httpRequestResponsePairs = getAllHTTPRequestResponsePairs();
 HTTPRequestResponsePairDAO.prototype.getResponse = function(request) {
 
     var notDefinedResponse = {
-        content: "Not Defined in the httpRequestResponsePairs",
+        content: "Not Defined in the httpRequestResponsePairs JSON",
         code: 400
     };
 
     var endpoint = request.route.path;
-    console.log("DEBUG - Request('path'):" + endpoint);
+    LOGGER.debug("HTTP Request('path'):" + endpoint);
 
     var headers = request.headers;
-    console.log("DEBUG - Request('headers'):");
-    console.log(headers);
+    LOGGER.debug("HTTP Request('headers'):",headers);
 
     var parameters = request.query;
-    console.log("DEBUG - Request('parameters'):");
-    console.log(parameters);
+    LOGGER.debug("HTTP Request('parameters'):",parameters);
 
     var uriParameters = request.params;
-    console.log("DEBUG - Request('uriParameters'):");
-    console.log(uriParameters);
+    LOGGER.debug("HTTP Request('uriParameters'):",uriParameters);
 
     var method = request.method;
-    console.log("DEBUG - Request('method'):" + method);
+    LOGGER.debug("HTTP Request('method'):" + method);
 
     var bodyRequest = request.body;
-    console.log("DEBUG - Request('body'):");
-    console.log(bodyRequest);
+    LOGGER.debug("HTTP Request('body'):" + bodyRequest);
 
-    console.log("start matching...");
+    LOGGER.debug("Start trying to search for the incomin HTTP request in the httpRequestResponsePairs JSON");
 
     for (var httpRequestResponsePair in httpRequestResponsePairs){
 
-        console.log("Trying to match ID:%s request...",httpRequestResponsePair);
+        LOGGER.debug("Trying to match ID:" + httpRequestResponsePair + " request...");
 
         var tuple = httpRequestResponsePairs[httpRequestResponsePair];
 
@@ -108,10 +120,10 @@ HTTPRequestResponsePairDAO.prototype.getResponse = function(request) {
         var bodyMatcherCheck = true;
 
         if (typeof tuple.request.body !== 'undefined') {
-            console.log("DEBUG - BodyMatcher start...");
+            LOGGER.debug("BodyMatcher executed...");
             //bodyMatcher = ObjectMatcher.match(tuple.request.body, bodyRequest );
             bodyMatcherCheck = JSON.stringify(tuple.request.body) === JSON.stringify(bodyRequest);
-            console.log("DEBUG - BodyMatcher: %s", bodyMatcherCheck);
+            LOGGER.debug("BodyMatcher: " + bodyMatcherCheck);
 
         }
 
@@ -119,32 +131,30 @@ HTTPRequestResponsePairDAO.prototype.getResponse = function(request) {
 
         var headersMatcherCheck = true;
         if (typeof tuple.request.headers !== 'undefined') {
-            console.log("DEBUG - HeadersMatcher start...");
+            LOGGER.debug("HeadersMatcher executed...");
             headersMatcherCheck = ObjectMatcher.match(tuple.request.headers, headers );
             //headersMatcherCheck = JSON.stringify(tuple.request.headers) === JSON.stringify(headers);
-            console.log("DEBUG - HeadersMatcher: %s",headersMatcherCheck);
+            LOGGER.debug("HeadersMatcher: " + headersMatcherCheck);
         }
 
         var parametersMatcherCheck = true;
         if (typeof tuple.request.parameters !== 'undefined') {
-            console.log("DEBUG - Parameters start...");
+            LOGGER.debug("ParametersMatcher executed...");
             parametersMatcherCheck = ObjectMatcher.match(tuple.request.parameters, parameters );
             //parametersMatcherCheck = JSON.stringify(tuple.request.parameters) === JSON.stringify(parameters);
-            console.log("DEBUG - ParametersMatcher: %s",parametersMatcherCheck);
+            LOGGER.debug("ParametersMatcher: " + parametersMatcherCheck);
         }
 
         var uriParametersMatcherCheck = true;
         if (typeof tuple.request.uriParameters !== 'undefined') {
-            console.log("DEBUG - Parameters start...");
+            LOGGER.debug("UriParametersMatcher executed...");
             uriParametersMatcherCheck = ObjectMatcher.match(tuple.request.uriParameters, uriParameters );
             //parametersMatcherCheck = JSON.stringify(tuple.request.parameters) === JSON.stringify(parameters);
-            console.log("DEBUG - UriParametersMatcher: %s",uriParametersMatcherCheck);
+            LOGGER.debug("ParametersMatcher: " + uriParametersMatcherCheck);
         }
 
         if (uriParametersMatcherCheck && endpointMatcherCheck && methodMatcherCheck && headersMatcherCheck && parametersMatcherCheck && bodyMatcherCheck  )
             return tuple.response;
-        else
-            notDefinedResponse
     }
 
     return notDefinedResponse;

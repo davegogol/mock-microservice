@@ -7,6 +7,8 @@ var xmlparser = require('express-xml-bodyparser');
 
 var RequestResponsePairDAO = require('./dao/HTTPRequestResponsePairDAO.js')
 var EndpointDAO = require('./dao/EndpointDAO.js')
+var Logger = require('./Logger.js');
+var Configuration = require('./Configuration.js');
 
 /**
  * This class represents the server configuration.
@@ -19,6 +21,19 @@ var EndpointDAO = require('./dao/EndpointDAO.js')
  * @constructor
  */
 function Server() {}
+
+
+/**
+ * App configuration
+ */
+var CONFIGURATION = new Configuration();
+
+/**
+ * Logger
+ *
+ * @type {exports|module.exports}
+ */
+var LOGGER = new Logger(CONFIGURATION.LOG_LEVEL);
 
 /**
  * It handles the interaction with the HTTPRequestResponsePair data.
@@ -39,7 +54,7 @@ var endpointDAO = new EndpointDAO();
  *
  * @type {number}
  */
-var SERVER_PORT = 8081;
+var SERVER_PORT = CONFIGURATION.SERVER_PORT;
 
 /**
  * Application server.
@@ -57,25 +72,27 @@ Server.prototype.start = function() {
 
     var endpoints = endpointDAO.getAllEndpoints();
 
-    for (var i in endpoints) {
+    LOGGER.debug("Server endpoints definition...");
 
-        endpoint = endpoints[i];
+    for (var endpoint in endpoints) {
+
+        endpoint = endpoints[endpoint];
 
         !function outer(endpoint) {
 
-            console.log("DEBUG - endpoint defined (%s,%s)",endpoint.method, endpoint.path );
+            LOGGER.debug("endpoint defined (" + endpoint.method + "," + endpoint.path + ")");
 
             if (endpoint.method == "GET") {
 
                 app.get(endpoint.path, function (req, res) {
 
-                    console.log("DEBUG - log request:");
-                    console.log(req);
-                    
+                    LOGGER.info("HTTP Request GET " + req.path);
+                    LOGGER.debug("incoming HTTP request:",req);
+
                     var response = requestResponsePairDAO.getResponse(req);
 
-                    console.log("DEBUG - log response:");
-                    console.log(response);
+                    LOGGER.info("HTTP Response status code: " + response.code);
+                    LOGGER.debug("outcoming HTTP response:",response);
 
                     res.status(response.code).send(response.content);
                 });
@@ -84,14 +101,14 @@ Server.prototype.start = function() {
             if (endpoint.method == "POST") {
                 app.post(endpoint.path, function (req, res) {
 
-                    console.log("DEBUG - log request:");
-                    console.log(req);
+                    LOGGER.info("HTTP Request POST " + req.path);
+                    LOGGER.debug("incoming HTTP request:",req);
 
                     var response = requestResponsePairDAO.getResponse(req);
 
-                    console.log("DEBUG - log response:");
-                    console.log(response);
+                    LOGGER.debug("outcoming HTTP response:",response);
 
+                    LOGGER.info("HTTP Response status code: " + response.code);
                     res.status(response.code).send(response.content);
                 });
             }
@@ -99,13 +116,13 @@ Server.prototype.start = function() {
             if (endpoint.method == "PUT") {
                 app.put(endpoint.path, function (req, res) {
 
-                    console.log("DEBUG - log request:");
-                    console.log(req);
+                    LOGGER.info("HTTP Request PUT " + req.path);
+                    LOGGER.debug("incoming HTTP request:",req);
 
                     var response = requestResponsePairDAO.getResponse(req);
 
-                    console.log("DEBUG - log response:");
-                    console.log(response);
+                    LOGGER.info("HTTP Response status code: " + response.code);
+                    LOGGER.debug("outcoming HTTP response:",response);
 
                     res.status(response.code).send(response.content);
                 });
@@ -114,13 +131,13 @@ Server.prototype.start = function() {
             if (endpoint.method == "DELETE") {
                 app.delete(endpoint.path, function (req, res) {
 
-                    console.log("DEBUG - log request:");
-                    console.log(req);
+                    LOGGER.info("HTTP Request DELETE " + req.path);
+                    LOGGER.debug("incoming HTTP request:",req);
 
                     var response = requestResponsePairDAO.getResponse(req);
 
-                    console.log("DEBUG - log response:");
-                    console.log(response);
+                    LOGGER.info("HTTP Response status code: " + response.code);
+                    LOGGER.debug("outcoming HTTP response:",response);
 
                     res.status(response.code).send(response.content);
                 });
@@ -134,10 +151,8 @@ Server.prototype.start = function() {
         var host = server.address().address
         var port = server.address().port
 
-        console.log("DEBUG - App listening at http://%s:%s", host, port)
-
+        LOGGER.info("App listening at http://" + host + ":" + port);
     })
-
 }
 
 module.exports = Server;
