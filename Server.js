@@ -111,7 +111,7 @@ Server.prototype.start = function() {
         }(endpoint)
     }
 
-    var server = app.listen(SERVER_PORT, function () {
+    var server = app.listen(SERVER_PORT,'localhost', function () {
 
         var host = server.address().address
         var port = server.address().port
