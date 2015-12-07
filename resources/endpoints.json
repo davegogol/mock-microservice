@@ -14,5 +14,17 @@
   "4": {
     "path": "/subject",
     "method": "PUT"
+  },
+  "5": {
+    "path": "/monitoring",
+    "method": "GET"
+  },
+  "6": {
+    "path": "/user",
+    "method": "DELETE"
+  },
+  "7": {
+    "path": "/category/new",
+    "method": "POST"
   }
 }

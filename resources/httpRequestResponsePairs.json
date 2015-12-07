@@ -54,5 +54,39 @@
       "content": "Stored",
       "code": "200"
     }
+  },
+  "5" :
+  {
+    "request": {
+      "endpoint": "/monitoring",
+      "method": "GET"
+    },
+    "response": {
+      "content": "Alive",
+      "code": "200"
+    }
+  },
+  "5" :
+  {
+    "request": {
+      "endpoint": "/user",
+      "method": "DELETE"
+    },
+    "response": {
+      "content": "Deleted",
+      "code": "200"
+    }
+  },
+  "6" :
+  {
+    "request": {
+      "endpoint": "/category/new",
+      "method": "POST",
+      "body": { "name" : "animals" }
+    },
+    "response": {
+      "content": "Created",
+      "code": "200"
+    }
   }
 }

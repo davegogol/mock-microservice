@@ -10,14 +10,17 @@ Here the list of the features supported.
 Methods supported: 
 
 * GET (query parameters, headers)
-* POST (application/json body, application/x-www-form-urlencoded body parameters, headers)
-* PUT (application/json body, application/x-www-form-urlencoded body parameters, headers)
+* POST (application/json body, application/xml body application/x-www-form-urlencoded content-types, headers)
+* PUT (application/json body, application/xml body application/x-www-form-urlencoded content-types, headers)
+* DELETE (application/json body, application/xml body application/x-www-form-urlencoded content-types, headers)
 
 Not supported yet: 
 * URI template (i.e. /user/{userId} )
-* POST (application/xml, multi-part/formdata and other content types body)
-* PUT (application/xml, multi-part/formdata and other content types body)
-* DELETE 
+* POST (Other content-types body)
+* PUT (Other content-types body)
+* DELETE (application/xml, multi-part/formdata and other content types body)
+
+
 
 ## HTTP Response
 

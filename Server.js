@@ -3,6 +3,8 @@
  */
 var express = require('express');
 var bodyParser = require('body-parser');
+var xmlparser = require('express-xml-bodyparser');
+
 var RequestResponsePairDAO = require('./dao/HTTPRequestResponsePairDAO.js')
 var EndpointDAO = require('./dao/EndpointDAO.js')
 
@@ -51,6 +53,7 @@ Server.prototype.start = function() {
 
     app.use(bodyParser.json()); // for parsing application/json
     app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+    app.use(xmlparser()); // for parsing application/xml
 
     var endpoints = endpointDAO.getAllEndpoints();
 
@@ -95,6 +98,21 @@ Server.prototype.start = function() {
 
             if (endpoint.method == "PUT") {
                 app.put(endpoint.path, function (req, res) {
+
+                    console.log("DEBUG - log request:");
+                    console.log(req);
+
+                    var response = requestResponsePairDAO.getResponse(req);
+
+                    console.log("DEBUG - log response:");
+                    console.log(response);
+
+                    res.status(response.code).send(response.content);
+                });
+            }
+
+            if (endpoint.method == "DELETE") {
+                app.delete(endpoint.path, function (req, res) {
 
                     console.log("DEBUG - log request:");
                     console.log(req);
