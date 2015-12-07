@@ -88,5 +88,17 @@
       "content": "Created",
       "code": "200"
     }
+  },
+  "7" :
+  {
+    "request": {
+      "endpoint": "/team/:teamId",
+      "method": "POST",
+      "uriParameters": { "teamId" : "5" }
+    },
+    "response": {
+      "content": "Created",
+      "code": "200"
+    }
   }
 }

@@ -14,12 +14,12 @@ Methods supported:
 * PUT (application/json body, application/xml body application/x-www-form-urlencoded content-types, headers)
 * DELETE (application/json body, application/xml body application/x-www-form-urlencoded content-types, headers)
 
-Not supported yet: 
 * URI template (i.e. /user/{userId} )
+
+Not supported yet: 
 * POST (Other content-types body)
 * PUT (Other content-types body)
-* DELETE (application/xml, multi-part/formdata and other content types body)
-
+* DELETE (multi-part/formdata and other content types body)
 
 
 ## HTTP Response
@@ -29,7 +29,7 @@ Not supported yet:
 
 Not supported yet: 
 
-* application/xml body
+* Other content-types body
 
 This application is under development, for the missing features. 
 

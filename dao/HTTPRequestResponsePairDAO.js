@@ -84,6 +84,10 @@ HTTPRequestResponsePairDAO.prototype.getResponse = function(request) {
     console.log("DEBUG - Request('parameters'):");
     console.log(parameters);
 
+    var uriParameters = request.params;
+    console.log("DEBUG - Request('uriParameters'):");
+    console.log(uriParameters);
+
     var method = request.method;
     console.log("DEBUG - Request('method'):" + method);
 
@@ -118,7 +122,7 @@ HTTPRequestResponsePairDAO.prototype.getResponse = function(request) {
             console.log("DEBUG - HeadersMatcher start...");
             headersMatcherCheck = ObjectMatcher.match(tuple.request.headers, headers );
             //headersMatcherCheck = JSON.stringify(tuple.request.headers) === JSON.stringify(headers);
-            console.log("DEBUG - BodyMatcher: %s",headersMatcherCheck);
+            console.log("DEBUG - HeadersMatcher: %s",headersMatcherCheck);
         }
 
         var parametersMatcherCheck = true;
@@ -126,10 +130,18 @@ HTTPRequestResponsePairDAO.prototype.getResponse = function(request) {
             console.log("DEBUG - Parameters start...");
             parametersMatcherCheck = ObjectMatcher.match(tuple.request.parameters, parameters );
             //parametersMatcherCheck = JSON.stringify(tuple.request.parameters) === JSON.stringify(parameters);
-            console.log("DEBUG - BodyMatcher: %s",parametersMatcherCheck);
+            console.log("DEBUG - ParametersMatcher: %s",parametersMatcherCheck);
         }
 
-        if (endpointMatcherCheck && methodMatcherCheck && headersMatcherCheck && parametersMatcherCheck && bodyMatcherCheck  )
+        var uriParametersMatcherCheck = true;
+        if (typeof tuple.request.uriParameters !== 'undefined') {
+            console.log("DEBUG - Parameters start...");
+            uriParametersMatcherCheck = ObjectMatcher.match(tuple.request.uriParameters, uriParameters );
+            //parametersMatcherCheck = JSON.stringify(tuple.request.parameters) === JSON.stringify(parameters);
+            console.log("DEBUG - UriParametersMatcher: %s",uriParametersMatcherCheck);
+        }
+
+        if (uriParametersMatcherCheck && endpointMatcherCheck && methodMatcherCheck && headersMatcherCheck && parametersMatcherCheck && bodyMatcherCheck  )
             return tuple.response;
         else
             notDefinedResponse

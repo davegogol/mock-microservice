@@ -26,5 +26,9 @@
   "7": {
     "path": "/category/new",
     "method": "POST"
+  },
+  "8": {
+    "path": "/team/:teamId",
+    "method": "POST"
   }
 }
