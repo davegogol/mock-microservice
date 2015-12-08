@@ -5,10 +5,11 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var xmlparser = require('express-xml-bodyparser');
 
-var RequestResponsePairDAO = require('./dao/HTTPRequestResponsePairDAO.js')
-var EndpointDAO = require('./dao/EndpointDAO.js')
+var RequestResponsePairDAO = require('./dao/HTTPRequestResponsePairDAO.js');
+var EndpointDAO = require('./dao/EndpointDAO.js');
 var Logger = require('./Logger.js');
 var Configuration = require('./Configuration.js');
+var HTTP_METHOD = require('./constants.js').allowedHttpMethods;
 
 /**
  * This class represents the server configuration.
@@ -59,7 +60,7 @@ var SERVER_PORT = CONFIGURATION.SERVER_PORT;
 /**
  * Application server.
  */
-var app = express()
+var app = express();
 
 /**
  * Starts the server with its configuration.
@@ -82,7 +83,7 @@ Server.prototype.start = function() {
 
             LOGGER.debug("endpoint defined (" + endpoint.method + "," + endpoint.path + ")");
 
-            if (endpoint.method == "GET") {
+            if (endpoint.method === HTTP_METHOD.GET) {
 
                 app.get(endpoint.path, function (req, res) {
 
@@ -98,7 +99,7 @@ Server.prototype.start = function() {
                 });
             }
 
-            if (endpoint.method == "POST") {
+            if (endpoint.method === HTTP_METHOD.POST) {
                 app.post(endpoint.path, function (req, res) {
 
                     LOGGER.info("HTTP Request POST " + req.path);
@@ -113,7 +114,7 @@ Server.prototype.start = function() {
                 });
             }
 
-            if (endpoint.method == "PUT") {
+            if (endpoint.method === HTTP_METHOD.PUT) {
                 app.put(endpoint.path, function (req, res) {
 
                     LOGGER.info("HTTP Request PUT " + req.path);
@@ -128,7 +129,7 @@ Server.prototype.start = function() {
                 });
             }
 
-            if (endpoint.method == "DELETE") {
+            if (endpoint.method === HTTP_METHOD.DELETE) {
                 app.delete(endpoint.path, function (req, res) {
 
                     LOGGER.info("HTTP Request DELETE " + req.path);
@@ -148,12 +149,12 @@ Server.prototype.start = function() {
 
     var server = app.listen(SERVER_PORT,'localhost', function () {
 
-        var host = server.address().address
-        var port = server.address().port
+        var host = server.address().address;
+        var port = server.address().port;
 
         LOGGER.info("App listening at http://" + host + ":" + port);
     })
-}
+};
 
 module.exports = Server;
 
