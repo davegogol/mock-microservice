@@ -1,50 +1,55 @@
 // Chai assertion library functions
-var assert = require('chai').assert;
 var expect = require('chai').expect;
+var log4js = require('log4js');
+var fs = require('fs');
 
-// Object of class should be tested
+/**
+ * Logger
+ */
+var LOGGER = log4js.getLogger('test');
+LOGGER.setLevel('DEBUG');
+
+/**
+ * Object of class should be tested
+ * @type {HTTPRequestResponsePairDAO|exports|module.exports}
+ */
 var RequestResponsePairDAO = require('../dao/HTTPRequestResponsePairDAO');
 var underTest = new RequestResponsePairDAO;
 var requestMock, responseMock;
 
+var HTTP_REQUESTS_JSON = "resources/httpRequestResponseData.json";
+
+
 describe('HTTPRequestResponsePairDAO', function () {
 
-    // TODO: Should be read from resources/httpRequestResponsePairs.json file
     beforeEach(function () {
-        requestMock = {
-            "route": {
-                "path": "/subject"
-            },
-            "endpoint": "/subject",
-            "method": "GET",
-            "query": {
-                "id": "15",
-                "category": "cars"
-            },
-            "headers": {
-                "predix-zone-id": "456-789-890",
-                "authentication": "Bearer fejg4g4"
-            },
-            "parameters": {
-                "id": "15",
-                "category": "cars"
-            }
-        };
 
-        responseMock = {
-            "content_type": "application/json",
-                "content": { "subjectId" : "1", "subjectName" : "Davide" },
-            "code": "200"
-        };
+        LOGGER.debug("Reading test data from file: " + HTTP_REQUESTS_JSON);
+
+        var httpRequestResponsePairs =
+            JSON.parse(fs.readFileSync(HTTP_REQUESTS_JSON, 'utf8'));
+
+        for(httpRequestResponsePair in httpRequestResponsePairs){
+
+            LOGGER.debug("Scenario: " + httpRequestResponsePair);
+
+            requestMock = httpRequestResponsePairs[httpRequestResponsePair].request;
+
+            LOGGER.debug("Request mock: " + JSON.stringify(requestMock));
+
+            responseMock = httpRequestResponsePairs[httpRequestResponsePair].response;
+
+            LOGGER.debug("Response mock: " + JSON.stringify(responseMock));
+        }
+
     });
 
     describe('getResponse()', function () {
         it("should return the appropriate response", function () {
             var response = underTest.getResponse(requestMock);
-            expect(response.content_type).to.equal('application/json');
-            expect(response.content.subjectId).to.equal('1');
-            expect(response.content.subjectName).to.equal('Davide');
             expect(responseMock.code).to.equal(response.code);
+            expect(responseMock.content).to.equal(response.content);
+
         });
     });
 });

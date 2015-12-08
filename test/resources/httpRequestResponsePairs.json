@@ -1,0 +1,40 @@
+{
+  "GET-ENDPOINT-MOCK" :
+  {
+    "request": {
+      "endpoint": "/monitoring/heartbeat",
+      "method": "GET"
+    },
+    "response": {
+      "content": "Alive",
+      "code": "200"
+    }
+  },
+  "GET-ENDPOINT-WITH-HEADERS-MOCK" :
+  {
+    "request": {
+      "endpoint": "/user/all",
+      "method": "GET",
+      "headers": {
+        "authentication" : "Basic eyui3216785==",
+        "authorization" : "Bearer eyui657wers213456a"
+      }
+    },
+    "response": {
+      "content": "Alive Authenticated User",
+      "code": "200"
+    }
+  },
+  "GET-ENDPOINT-WITH-URI-PARAMETERS-MOCK"  :
+  {
+    "request": {
+      "endpoint": "/user/:userId",
+      "method": "GET",
+      "uriParameters": { "userId" : "5" }
+    },
+    "response": {
+      "content": "Davide Giannico",
+      "code": "200"
+    }
+  }
+}

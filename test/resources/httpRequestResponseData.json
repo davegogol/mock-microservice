@@ -1,0 +1,42 @@
+{
+  "GET-SCENARIO" :
+  {
+    "request": {
+      "route": {"path" : "/monitoring/heartbeat"},
+      "method": "GET"
+    },
+    "response": {
+      "content": "Alive",
+      "code": "200"
+    }
+  },
+  "GET-SCENARIO-WITH-HEADERS" :
+  {
+    "request": {
+      "route": {"path" : "/user/all"},
+      "method": "GET",
+      "headers": {
+        "authentication" : "Basic eyui3216785==",
+        "authorization" : "Bearer eyui657wers213456a"
+      }
+    },
+    "response": {
+      "content": "Alive Authenticated User",
+      "code": "200"
+    }
+  },
+  "GET-SCENARIO-WITH-URI-PARAMETERS" :
+  {
+    "request": {
+      "route": {"path" : "/user/:userId"},
+      "method": "GET",
+      "params": {
+        "userId" : "5"
+      }
+    },
+    "response": {
+      "content": "Davide Giannico",
+      "code": "200"
+    }
+  }
+}
