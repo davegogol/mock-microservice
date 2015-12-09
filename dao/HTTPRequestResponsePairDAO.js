@@ -5,6 +5,7 @@
 var fs = require('fs');
 var StringMatcher = require("./../matcher/StringMatcher.js");
 var ObjectMatcher = require("./../matcher/ObjectMatcher.js");
+var deepEqual = require('deep-equal');
 var Configuration = require('./../Configuration.js');
 var Logger = require('./../Logger.js');
 
@@ -121,10 +122,8 @@ HTTPRequestResponsePairDAO.prototype.getResponse = function(request) {
 
         if (typeof tuple.request.body !== 'undefined') {
             LOGGER.debug("BodyMatcher executed...");
-            //bodyMatcher = ObjectMatcher.match(tuple.request.body, bodyRequest );
-            bodyMatcherCheck = JSON.stringify(tuple.request.body) === JSON.stringify(bodyRequest);
+            bodyMatcherCheck = deepEqual(tuple.request.body, bodyRequest);
             LOGGER.debug("BodyMatcher: " + bodyMatcherCheck);
-
         }
 
         var methodMatcherCheck = stringMatcher.match(tuple.request.method, method );
@@ -140,16 +139,14 @@ HTTPRequestResponsePairDAO.prototype.getResponse = function(request) {
         var parametersMatcherCheck = true;
         if (typeof tuple.request.parameters !== 'undefined') {
             LOGGER.debug("ParametersMatcher executed...");
-            parametersMatcherCheck = ObjectMatcher.match(tuple.request.parameters, parameters );
-            //parametersMatcherCheck = JSON.stringify(tuple.request.parameters) === JSON.stringify(parameters);
+            parametersMatcherCheck = deepEqual(tuple.request.parameters, parameters );
             LOGGER.debug("ParametersMatcher: " + parametersMatcherCheck);
         }
 
         var uriParametersMatcherCheck = true;
         if (typeof tuple.request.uriParameters !== 'undefined') {
             LOGGER.debug("UriParametersMatcher executed...");
-            uriParametersMatcherCheck = ObjectMatcher.match(tuple.request.uriParameters, uriParameters );
-            //parametersMatcherCheck = JSON.stringify(tuple.request.parameters) === JSON.stringify(parameters);
+            uriParametersMatcherCheck = deepEqual(tuple.request.uriParameters, uriParameters );
             LOGGER.debug("ParametersMatcher: " + uriParametersMatcherCheck);
         }
 
